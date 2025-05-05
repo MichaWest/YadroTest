@@ -66,19 +66,19 @@ class JSON_creator:
     def create_file(self) -> list:
         json_list = []
 
-        self.__define_tag_dict__()
-        root_tag = self.__find_root_element__()
+        self.__define_tag_dict()
+        root_tag = self.__find_root_element()
 
-        self.__create_structure__(root_tag)
+        self.__create_structure(root_tag)
         json_list = self.__write_out_structure__()
 
         with open(self.output_path, mode='w') as f:
             f.write(json.dumps(json_list, indent=1))
         return json_list
 
-    def __create_structure__(self, tag) -> JSON_node:
+    def __create_structure(self, tag) -> JSON_node:
         node = JSON_node()
-        self.__define_fields__(node, tag)
+        self.__define_fields(node, tag)
 
         tag_attr = self.xml_reader.get_attribute(tag)
 
@@ -88,12 +88,12 @@ class JSON_creator:
             source_dict.update({k: v for k, v in self.class_tags.items() if (v['name']==self.aggregation_tags[t]['source'])})
 
         for t in list(source_dict):
-            self.__create_structure__(t)
+            self.__create_structure(t)
 
         self.list_node.append(node)
         return node
 
-    def __define_fields__(self, node: JSON_node, tag) -> JSON_node:
+    def __define_fields(self, node: JSON_node, tag) -> JSON_node:
         # определяем поле 'name'
         attrs = self.class_tags[tag]
         tag_name = attrs['name']
@@ -131,13 +131,13 @@ class JSON_creator:
                 node.parameters.append({'name': child_name, 'type': 'class'})
         return node
 
-    def __write_out_structure__(self) -> list:
+    def __write_out_structure(self) -> list:
         json_list = []
         for n in self.list_node:
             json_list.append(n.get_json_dict())
         return json_list
 
-    def __define_tag_dict__(self):
+    def __define_tag_dict(self):
         root = self.xml_reader.get_root()
         kids = self.xml_reader.get_kids(root)
 
@@ -150,7 +150,7 @@ class JSON_creator:
             if self.xml_reader.get_tag_name(k) == 'Aggregation':
                 self.aggregation_tags[k] = self.xml_reader.get_attribute(k)
 
-    def __find_root_element__(self):
+    def __find_root_element(self):
         for k in self.class_tags:
             if self.xml_reader.get_attribute(k)['isRoot'] == 'true':
                 return k
