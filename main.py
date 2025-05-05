@@ -1,4 +1,3 @@
-from xml_reader import XML_reader
 from json_creator import JSON_creator
 from xml_creator import XML_creator
 import traceback
