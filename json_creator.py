@@ -70,7 +70,7 @@ class JSON_creator:
         root_tag = self.__find_root_element()
 
         self.__create_structure(root_tag)
-        json_list = self.__write_out_structure__()
+        json_list = self.__write_out_structure()
 
         with open(self.output_path, mode='w') as f:
             f.write(json.dumps(json_list, indent=1))
